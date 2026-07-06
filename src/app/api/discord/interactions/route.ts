@@ -28,9 +28,16 @@ export async function POST(
         );
     }
 
+    const raw = JSON.parse(rawBody);
+
+    // PING は最小ペイロード（{"type":1}）のため Zod パース前に処理
+    if (raw.type === InteractionType.PING) {
+        return handlePing();
+    }
+
     let interaction;
     try {
-        interaction = InteractionSchema.parse(JSON.parse(rawBody));
+        interaction = InteractionSchema.parse(raw);
     } catch {
         return NextResponse.json(
             {
@@ -47,8 +54,6 @@ export async function POST(
     }
 
     switch (interaction.type) {
-        case InteractionType.PING:
-            return handlePing();
 
         case InteractionType.APPLICATION_COMMAND:
             if (interaction.data?.name === 'set') {
