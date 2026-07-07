@@ -57,13 +57,13 @@ export async function POST(
 
         case InteractionType.APPLICATION_COMMAND:
             if (interaction.data?.name === 'set') {
-                return handleSetCommand(interaction);
+                return await handleSetCommand(interaction);
             }
             break;
 
         case InteractionType.MESSAGE_COMPONENT:
             if (interaction.data?.customId?.startsWith('create_edit_link:')) {
-                return handleCreateEditLink(interaction);
+                return await handleCreateEditLink(interaction);
             }
             break;
     }
