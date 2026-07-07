@@ -37,11 +37,13 @@ export async function createEditSession(
     );
 
     if (res.ok) {
-        return EditSessionResponseSchema.parse(await res.json());
+        const data = EditSessionResponseSchema.parse(await res.json());
+        return { success: true as const, ...data };
     }
 
     if (res.status === 409){
-        return null;
+        const body = await res.json() as { error: string; url?: string };
+        return { success: false as const, lastSession: body.url ?? null };
     }
 
     throw new Error(`Failed to create edit session: ${await res.text()}`);
