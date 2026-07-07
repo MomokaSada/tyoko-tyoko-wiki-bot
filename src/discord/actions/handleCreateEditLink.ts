@@ -29,16 +29,20 @@ export async function handleCreateEditLink(
     const maxEdits = parts[3] ? Number(parts[3]) : DEFAULT_MAX_EDITS;
 
     try{
-        const data = await createEditSession(expiresInMinutes, maxEdits);
-        if (data === null) {
+        const result = await createEditSession(expiresInMinutes, maxEdits);
+        if (result.success === false) {
+            const lastUrl = result.lastSession;
+            const msg = lastUrl
+                ? `アクティブな編集セッションが十分に残っています\n[最新のリンク](${process.env.APP_API_URL}${lastUrl})`
+                : 'アクティブな編集セッションが十分に残っています';
             return NextResponse.json({
                 type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
-                data: { content: 'アクティブな編集セッションが十分に残っています', flags: InteractionResponseFlags.EPHEMERAL },
+                data: { content: msg, flags: InteractionResponseFlags.EPHEMERAL },
             });
         }
         await sendMessage(
             threadId,
-            `編集リンク: [ここをクリックしてwikiを編集！](${process.env.APP_API_URL}${data.url})`
+            `[今日のリンク](${process.env.APP_API_URL}${result.url})`
         );
         return NextResponse.json({
             type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
