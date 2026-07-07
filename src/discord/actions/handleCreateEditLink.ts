@@ -42,7 +42,7 @@ export async function handleCreateEditLink(
         }
         await sendMessage(
             threadId,
-            `[今日のリンク](${process.env.APP_API_URL}${result.url})`
+            `[項目編集リンク](${process.env.APP_API_URL}${result.url})`
         );
         return NextResponse.json({
             type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
