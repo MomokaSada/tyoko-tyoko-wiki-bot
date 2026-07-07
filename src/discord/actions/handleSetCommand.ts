@@ -20,10 +20,15 @@ export async function handleSetCommand(
         return NextResponse.json({
             type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
             data: {
-                content:
-                    `>>> 項目編集リンク\n` +
-                    `有効期限: ${expiresIn}分 | 最大編集回数: ${maxEdits}回\n` +
-                    `編集用リンクを発行するには下のボタンを押してください。`,
+                embeds: [
+                    {
+                        title: '項目編集リンク',
+                        description:
+                            `有効期限: ${expiresIn}分 | 最大編集回数: ${maxEdits}回\n\n` +
+                            `編集用リンクを発行するには下のボタンを押してください。`,
+                        color: 0x4E5AF0,
+                    },
+                ],
                 components: [
                     {
                         type: 1,
